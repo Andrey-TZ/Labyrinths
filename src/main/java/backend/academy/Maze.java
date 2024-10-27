@@ -6,22 +6,40 @@ public final class Maze {
     @Getter private final int height;
     @Getter private final int width;
     @Getter private final Cell[][] grid;
-    private Coordinate start, finish;
-    Cell cell;
+    private Coordinate start;
+    private Coordinate finish;
 
-    public Maze(int height, int width) {
+    public enum MazeType { EMPTY, WALLS }
+
+    public Maze(int height, int width, MazeType type) {
         this.height = height;
         this.width = width;
         grid = new Cell[height][width];
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-
-                if ((i % 2 != 0 && j % 2 != 0) &&
-                    (i < height - 1 && j < width - 1)) {
-                    grid[i][j] = new Cell(j, i, Cell.Type.CELL);
-                } else {
-                    grid[i][j] = new Cell(j, i, Cell.Type.WALL);
+        switch (type) {
+            case WALLS -> {
+                for (int i = 0; i < height; i++) {
+                    for (int j = 0; j < width; j++) {
+                        if ((i % 2 != 0 && j % 2 != 0)
+                            && (i < height - 1 && j < width - 1)) {
+                            grid[i][j] = new Cell(j, i, Cell.Type.CELL);
+                        } else {
+                            grid[i][j] = new Cell(j, i, Cell.Type.WALL);
+                        }
+                    }
+                }
+            }
+            default -> { // По умолчанию стены только по краям лабиринта
+                for (int i = 0; i < height; i++) {
+                    for (int j = 0; j < width; j++) {
+                        if (i % 2 == 0) {
+                            grid[i][j] = new Cell(j, i, Cell.Type.WALL);
+                        } else if (j == 0 || j == width - 1) {
+                            grid[i][j] = new Cell(j, i, Cell.Type.WALL);
+                        } else {
+                            grid[i][j] = new Cell(j, i, Cell.Type.CELL);
+                        }
+                    }
                 }
             }
         }
@@ -50,11 +68,11 @@ public final class Maze {
     }
 
     public void makeVisited(int x, int y) {
-        grid[y][x] = new Cell(x, y, Cell.Type.VISITED);
+        grid[y][x] = new Cell(x, y, Cell.Type.PASSAGE);
     }
 
     public void makeVisitedWay(int x, int y) {
-        grid[y][x] = new Cell(x, y, Cell.Type.VISITED_WAY);
+        grid[y][x] = new Cell(x, y, Cell.Type.VISITED);
     }
 
     public void makeWall(int x, int y) {
@@ -76,11 +94,12 @@ public final class Maze {
             for (int j = 0; j < width; j++) {
                 switch (grid[i][j].type()) {
                     case WALL -> builder.append("#");
-                    case VISITED, DEAD_END -> builder.append(" ");
+                    case PASSAGE, DEAD_END -> builder.append(" ");
                     case CELL -> builder.append("C");
                     case START -> builder.append("S");
                     case FINISH -> builder.append("F");
-                    case VISITED_WAY -> builder.append("W");
+                    case VISITED -> builder.append("W");
+                    default -> builder.append("D");
                 }
             }
             builder.append("\n");

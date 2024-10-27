@@ -1,13 +1,16 @@
-package backend.academy;
+package backend.academy.generators;
 
+import backend.academy.Cell;
+import backend.academy.Coordinate;
+import backend.academy.Maze;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 import static java.lang.Math.abs;
 
-public class StandartGenerator implements Generator {
+public final class BackTrackingGenerator implements Generator {
     private Maze maze;
-    public static final Random random = new Random();
+    public static final Random RANDOM = new Random();
 
     private ArrayList<Cell> getNeighbours(int height, int width, Cell current, Maze maze) {
         int x = current.x();
@@ -26,12 +29,12 @@ public class StandartGenerator implements Generator {
         for (Coordinate cell : neighbours) {
             // Проверяем, что клетка находится в лабиринте
 
-            if (cell.x() >= 0 && cell.x() < width && cell.y() >= 0 &&
-                cell.y() < height) {
+            if (cell.x() >= 0 && cell.x() < width && cell.y() >= 0
+                && cell.y() < height) {
                 // Берем клетку с нужными координатами из лабиринта
                 Cell mazeCell = maze.getCell(cell.x(), cell.y());
                 // Проверяем, что это не стена лабиринта и алгоритм туда еще не заходил
-                if (mazeCell.type() != Cell.Type.WALL && mazeCell.type() != Cell.Type.VISITED) {
+                if (mazeCell.type() != Cell.Type.WALL && mazeCell.type() != Cell.Type.PASSAGE) {
                     cells.add(mazeCell);
 
                 }
@@ -44,7 +47,7 @@ public class StandartGenerator implements Generator {
         ArrayList<Cell> unvisited = new ArrayList<>();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (maze.getCell(j, i).type() != Cell.Type.WALL && maze.getCell(j, i).type() != Cell.Type.VISITED) {
+                if (maze.getCell(j, i).type() != Cell.Type.WALL && maze.getCell(j, i).type() != Cell.Type.PASSAGE) {
                     unvisited.add(maze.getCell(j, i));
                 }
             }
@@ -67,10 +70,10 @@ public class StandartGenerator implements Generator {
 
     @Override
     public Maze generate(int height, int width, Coordinate start, Coordinate finish) {
-        maze = new Maze(height, width);
+        maze = new Maze(height, width, Maze.MazeType.WALLS);
 
         Cell currentCell = maze.getCell(start.x(), start.y());
-        ArrayList<Cell> neighbours, unvisited;
+        ArrayList<Cell> neighbours;
         Cell neighbour;
         Stack<Cell> stack = new Stack<>();
         int unvisitedNum = height * width;
@@ -79,7 +82,7 @@ public class StandartGenerator implements Generator {
             neighbours = getNeighbours(height, width, currentCell, maze);
             maze.makeVisited(currentCell.x(), currentCell.y());
             if (!neighbours.isEmpty()) {
-                neighbour = neighbours.get(random.nextInt(neighbours.size()));
+                neighbour = neighbours.get(RANDOM.nextInt(neighbours.size()));
                 stack.push(currentCell);
                 maze = removeWall(currentCell, neighbour, maze);
                 currentCell = neighbour;

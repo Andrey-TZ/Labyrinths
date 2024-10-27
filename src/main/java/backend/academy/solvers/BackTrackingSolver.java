@@ -1,5 +1,9 @@
-package backend.academy;
+package backend.academy.solvers;
 
+import backend.academy.Cell;
+import backend.academy.Coordinate;
+import backend.academy.Maze;
+import backend.academy.generators.BackTrackingGenerator;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -14,7 +18,7 @@ import java.util.Stack;
 //          1. Выдерните клетку из стека
 //          2. Сделайте ее текущей
 //      3. Иначе выхода нет
-public class Solver1 implements Solver {
+public final class BackTrackingSolver implements Solver {
     Maze maze;
 
     private ArrayList<Cell> getNeighbours(Cell current, Maze maze) {
@@ -34,13 +38,13 @@ public class Solver1 implements Solver {
         for (Coordinate cell : neighbours) {
             // Проверяем, что клетка находится в лабиринте
 
-            if (cell.x() >= 0 && cell.x() < maze.width() && cell.y() >= 0 &&
-                cell.y() < maze.height()) {
+            if (cell.x() >= 0 && cell.x() < maze.width() && cell.y() >= 0
+                && cell.y() < maze.height()) {
                 // Берем клетку с нужными координатами из лабиринта
                 Cell mazeCell = maze.getCell(cell.x(), cell.y());
                 // Проверяем, что это не стена лабиринта и алгоритм туда еще не заходил
-                if (mazeCell.type() != Cell.Type.WALL && mazeCell.type() != Cell.Type.VISITED_WAY &&
-                    mazeCell.type() != Cell.Type.DEAD_END) {
+                if (mazeCell.type() != Cell.Type.WALL && mazeCell.type() != Cell.Type.VISITED
+                    && mazeCell.type() != Cell.Type.DEAD_END) {
                     cells.add(mazeCell);
                 }
             }
@@ -60,7 +64,7 @@ public class Solver1 implements Solver {
             neighbours = getNeighbours(currentCell, maze);
             if (!neighbours.isEmpty()) {
                 stack.push(currentCell);
-                neighbour = neighbours.get(StandartGenerator.random.nextInt(neighbours.size()));
+                neighbour = neighbours.get(BackTrackingGenerator.RANDOM.nextInt(neighbours.size()));
                 maze.makeVisitedWay(currentCell.x(), currentCell.y());
                 currentCell = neighbour;
             } else if (!stack.isEmpty()) {
