@@ -5,6 +5,7 @@ import backend.academy.generators.EllerGenerator;
 import backend.academy.generators.Generator;
 import backend.academy.handlers.InHandler;
 import backend.academy.handlers.OutHandler;
+import backend.academy.solvers.BFSSolver;
 import backend.academy.solvers.BackTrackingSolver;
 import backend.academy.solvers.Solver;
 import java.util.HashMap;
@@ -18,10 +19,11 @@ public final class GameSession {
     private static final int SCALE = 2;
 
     {
-        generators.put("Эллер", new EllerGenerator());
-        generators.put("Бэк Трэкинг", new BackTrackingGenerator());
+        generators.put("эллер", new EllerGenerator());
+        generators.put("бэк трэкинг", new BackTrackingGenerator());
 
-        solvers.put("Бэк Трэкинг", new BackTrackingSolver());
+        solvers.put("бэк трэкинг", new BackTrackingSolver());
+        solvers.put("поиск в ширину", new BFSSolver());
     }
 
     public void run() {
@@ -65,7 +67,7 @@ public final class GameSession {
 
         String solverName = input.getString("Введите тип алгоритма: ");
         while (true) {
-            if (generators.containsKey(solverName)) {
+            if (solvers.containsKey(solverName)) {
                 solver = solvers.get(solverName);
                 break;
             }

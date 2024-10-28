@@ -1,13 +1,14 @@
 package backend.academy;
 
+import java.util.Arrays;
 import lombok.Getter;
 
 public final class Maze {
     @Getter private final int height;
     @Getter private final int width;
     @Getter private final Cell[][] grid;
-    private Coordinate start;
-    private Coordinate finish;
+    @Getter private Coordinate start;
+    @Getter private Coordinate finish;
 
     public enum MazeType { EMPTY, WALLS }
 
@@ -105,6 +106,31 @@ public final class Maze {
             builder.append("\n");
         }
         return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int total = 31;
+
+        total = 31 * total + height;
+        total = 31 * total + width;
+        total = 31 * total + Arrays.deepHashCode(grid);
+        total = 31 * total + start.hashCode() + finish.hashCode();
+        return total;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Maze another = (Maze) obj;
+        return height == another.height() && width == another.width() && start.equals(another.start())
+        && finish.equals(another.finish()) && Arrays.deepEquals(grid, another.grid());
     }
 
 }

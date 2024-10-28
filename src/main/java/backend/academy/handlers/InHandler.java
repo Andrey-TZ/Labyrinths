@@ -36,7 +36,7 @@ public class InHandler {
     public String getString(String message) {
         output.showMessage(message, false);
         if (scanner.hasNextLine()) {
-            return scanner.nextLine();
+            return scanner.nextLine().toLowerCase();
         }
         throw new RuntimeException(NULL_STRING_EXCEPTION);
     }

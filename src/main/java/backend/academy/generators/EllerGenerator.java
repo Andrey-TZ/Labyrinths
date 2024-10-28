@@ -5,10 +5,10 @@ import backend.academy.Maze;
 import static backend.academy.generators.BackTrackingGenerator.RANDOM;
 
 public class EllerGenerator implements Generator {
-    int[][] mazeInt;
-    int height;
-    int width;
-    Maze mazeCell;
+    private int[][] mazeInt;
+    private int height;
+    private int width;
+    private Maze mazeCell;
 
     @SuppressWarnings("CyclomaticComplexity")
     @Override
