@@ -11,7 +11,7 @@ import java.util.HashMap;
 public final class BFSSolver implements Solver {
     private Maze solvedMaze;
     private final Deque<Cell> deque = new ArrayDeque<>();
-    private final HashMap<Cell, ArrayList<Cell>> chainOfCells = new HashMap<>();
+    private final HashMap<Cell,Cell> chainOfCells = new HashMap<>();
     private final ArrayList<Cell> visitedCells = new ArrayList<>();
 
     private ArrayList<Cell> getNeighbours(Cell current) {
@@ -39,9 +39,7 @@ public final class BFSSolver implements Solver {
                     neighbours.add(cell);
                     visitedCells.add(cell);
 
-                    ArrayList<Cell> previousCells = new ArrayList<>(chainOfCells.get(current));
-                    previousCells.add(current);
-                    chainOfCells.put(cell, previousCells);
+                    chainOfCells.put(cell, current);
                 }
             }
         }
@@ -49,8 +47,10 @@ public final class BFSSolver implements Solver {
     }
 
     private Maze displayPath(Maze maze, Cell finishCell) {
-        for (Cell cell : chainOfCells.get(finishCell)) {
-            maze.makeVisitedWay(cell.x(), cell.y());
+        Cell current = chainOfCells.get(finishCell);
+        while(chainOfCells.containsKey(current)) {
+            maze.makeVisitedWay(current.x(), current.y());
+            current = chainOfCells.get(current);
         }
         return maze;
     }
@@ -62,8 +62,6 @@ public final class BFSSolver implements Solver {
         ArrayList<Cell> neighbours;
 
         deque.add(currentCell);
-        ArrayList<Cell> previousCells = new ArrayList<>();
-        chainOfCells.put(currentCell, previousCells);
 
         do {
             currentCell = deque.pop();
