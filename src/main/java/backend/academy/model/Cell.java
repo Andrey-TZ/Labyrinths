@@ -1,4 +1,4 @@
-package backend.academy;
+package backend.academy.model;
 
 public record Cell(int x, int y, Type type) {
     public enum Type { WALL, CELL, PASSAGE, FOREST, HILL, START, FINISH, VISITED, DEAD_END }
@@ -28,5 +28,9 @@ public record Cell(int x, int y, Type type) {
         Cell another = (Cell) obj;
         return x == another.x() && y == another.y() && type == another.type();
 
+    }
+
+    public Cell copy() {
+        return new Cell(x, y, type);
     }
 }

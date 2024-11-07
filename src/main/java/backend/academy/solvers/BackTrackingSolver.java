@@ -1,9 +1,9 @@
 package backend.academy.solvers;
 
-import backend.academy.Cell;
-import backend.academy.Coordinate;
-import backend.academy.Maze;
-import backend.academy.generators.BackTrackingGenerator;
+import backend.academy.GameSession;
+import backend.academy.model.Cell;
+import backend.academy.model.Coordinate;
+import backend.academy.model.Maze;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -19,8 +19,8 @@ import java.util.Stack;
 //          2. Сделайте ее текущей
 //      3. Иначе выхода нет
 public final class BackTrackingSolver implements Solver {
-    Maze maze;
 
+    // Возвращает доступных соседей клетки
     private ArrayList<Cell> getNeighbours(Cell current, Maze maze) {
         int x = current.x();
         int y = current.y();
@@ -54,27 +54,28 @@ public final class BackTrackingSolver implements Solver {
 
     @Override
     public Maze solve(Maze maze) {
-        Cell startCell = maze.getStartCell();
+        Maze solvedMaze = maze.copy();
+        Cell startCell = solvedMaze.getStartCell();
         Cell currentCell = startCell;
         Stack<Cell> stack = new Stack<>();
         ArrayList<Cell> neighbours;
         Cell neighbour;
 
-        while (!maze.checkFinish(currentCell)) {
-            neighbours = getNeighbours(currentCell, maze);
+        while (!solvedMaze.checkFinish(currentCell)) {
+            neighbours = getNeighbours(currentCell, solvedMaze);
             if (!neighbours.isEmpty()) {
                 stack.push(currentCell);
-                neighbour = neighbours.get(BackTrackingGenerator.RANDOM.nextInt(neighbours.size()));
-                maze.makeVisitedWay(currentCell.x(), currentCell.y());
+                neighbour = neighbours.get(GameSession.RANDOM.nextInt(neighbours.size()));
+                solvedMaze.makeVisitedWay(currentCell.x(), currentCell.y());
                 currentCell = neighbour;
             } else if (!stack.isEmpty()) {
-                maze.makeDeadEnd(currentCell.x(), currentCell.y());
+                solvedMaze.makeDeadEnd(currentCell.x(), currentCell.y());
                 currentCell = stack.pop();
             } else {
                 break;
             }
         }
-        maze.setStart(new Coordinate(startCell.x(), startCell.y()));
-        return maze;
+        solvedMaze.setStart(new Coordinate(startCell.x(), startCell.y()));
+        return solvedMaze;
     }
 }

@@ -5,12 +5,12 @@ import backend.academy.model.Maze;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class EllerGeneratorTest {
+public class BackTrackingGeneratorTest {
     private final int width = 100;
     private final int height = 100;
     private final Coordinate start = new Coordinate(1, 1);
     private final Coordinate finish = new Coordinate(width - 2, height - 2);
-    private final EllerGenerator generator = new EllerGenerator();
+    private final Generator generator = new BackTrackingGenerator();
 
     @Test
     void generate_notNull() {
@@ -26,5 +26,4 @@ public class EllerGeneratorTest {
 
         Assertions.assertNotEquals(maze1, maze2);
     }
-
 }

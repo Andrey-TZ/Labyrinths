@@ -1,8 +1,8 @@
 package backend.academy.solvers;
 
-import backend.academy.Cell;
-import backend.academy.Coordinate;
-import backend.academy.Maze;
+import backend.academy.model.Cell;
+import backend.academy.model.Coordinate;
+import backend.academy.model.Maze;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -10,10 +10,10 @@ import java.util.HashMap;
 
 public final class BFSSolver implements Solver {
     private Maze solvedMaze;
-    private final Deque<Cell> deque = new ArrayDeque<>();
-    private final HashMap<Cell,Cell> chainOfCells = new HashMap<>();
-    private final ArrayList<Cell> visitedCells = new ArrayList<>();
+    private HashMap<Cell, Cell> chainOfCells;
+    private ArrayList<Cell> visitedCells;
 
+    // Возвращает доступных соседей клетки
     private ArrayList<Cell> getNeighbours(Cell current) {
         ArrayList<Cell> neighbours = new ArrayList<>();
         int x = current.x();
@@ -46,19 +46,23 @@ public final class BFSSolver implements Solver {
         return neighbours;
     }
 
-    private Maze displayPath(Maze maze, Cell finishCell) {
+    // Отображает путь в лабиринте
+    private void displayPath(Cell finishCell) {
         Cell current = chainOfCells.get(finishCell);
-        while(chainOfCells.containsKey(current)) {
-            maze.makeVisitedWay(current.x(), current.y());
+        while (chainOfCells.containsKey(current)) {
+            solvedMaze.makeVisitedWay(current.x(), current.y());
             current = chainOfCells.get(current);
         }
-        return maze;
     }
 
     @Override
     public Maze solve(Maze maze) {
-        solvedMaze = maze;
-        Cell currentCell = maze.getStartCell();
+        Deque<Cell> deque = new ArrayDeque<>();
+        chainOfCells = new HashMap<>();
+        visitedCells = new ArrayList<>();
+
+        solvedMaze = maze.copy();
+        Cell currentCell = solvedMaze.getStartCell();
         ArrayList<Cell> neighbours;
 
         deque.add(currentCell);
@@ -66,8 +70,9 @@ public final class BFSSolver implements Solver {
         do {
             currentCell = deque.pop();
 
-            if (maze.checkFinish(currentCell)) {
-                return displayPath(maze, currentCell);
+            if (solvedMaze.checkFinish(currentCell)) {
+                displayPath(currentCell);
+                return solvedMaze;
             }
 
             neighbours = getNeighbours(currentCell);
@@ -76,6 +81,7 @@ public final class BFSSolver implements Solver {
             }
         }
         while (!deque.isEmpty());
-        return displayPath(maze, currentCell);
+        displayPath(currentCell);
+        return solvedMaze;
     }
 }

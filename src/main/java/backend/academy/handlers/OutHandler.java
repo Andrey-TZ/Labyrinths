@@ -1,6 +1,6 @@
 package backend.academy.handlers;
 
-import backend.academy.Maze;
+import backend.academy.model.Maze;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;

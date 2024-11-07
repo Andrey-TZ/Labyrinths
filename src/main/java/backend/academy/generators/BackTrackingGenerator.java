@@ -1,16 +1,14 @@
 package backend.academy.generators;
 
-import backend.academy.Cell;
-import backend.academy.Coordinate;
-import backend.academy.Maze;
+import backend.academy.GameSession;
+import backend.academy.model.Cell;
+import backend.academy.model.Coordinate;
+import backend.academy.model.Maze;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Stack;
 import static java.lang.Math.abs;
 
 public final class BackTrackingGenerator implements Generator {
-    private Maze maze;
-    public static final Random RANDOM = new Random();
 
     private ArrayList<Cell> getNeighbours(int height, int width, Cell current, Maze maze) {
         int x = current.x();
@@ -43,7 +41,7 @@ public final class BackTrackingGenerator implements Generator {
         return cells;
     }
 
-    private ArrayList<Cell> getUnvisited(int height, int width) {
+    private ArrayList<Cell> getUnvisited(Maze maze, int height, int width) {
         ArrayList<Cell> unvisited = new ArrayList<>();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -70,7 +68,7 @@ public final class BackTrackingGenerator implements Generator {
 
     @Override
     public Maze generate(int height, int width, Coordinate start, Coordinate finish) {
-        maze = new Maze(height, width, Maze.MazeType.WALLS);
+        Maze maze = new Maze(height, width, Maze.MazeType.WALLS);
 
         Cell currentCell = maze.getCell(start.x(), start.y());
         ArrayList<Cell> neighbours;
@@ -82,7 +80,7 @@ public final class BackTrackingGenerator implements Generator {
             neighbours = getNeighbours(height, width, currentCell, maze);
             maze.makeVisited(currentCell.x(), currentCell.y());
             if (!neighbours.isEmpty()) {
-                neighbour = neighbours.get(RANDOM.nextInt(neighbours.size()));
+                neighbour = neighbours.get(GameSession.RANDOM.nextInt(neighbours.size()));
                 stack.push(currentCell);
                 maze = removeWall(currentCell, neighbour, maze);
                 currentCell = neighbour;
@@ -90,7 +88,7 @@ public final class BackTrackingGenerator implements Generator {
                 currentCell = stack.pop();
             } else {
 //                    System.out.println(unvisitedNum);
-//                    unvisited = getUnvisited(height, width);
+//                    unvisited = getUnvisited(maze, height, width);
 //                    unvisitedNum = unvisited.size();
 //                    currentCell = unvisited.get(random.nextInt(unvisited.size()));
 //                    maze.makeVisited(currentCell.x(), currentCell.y());

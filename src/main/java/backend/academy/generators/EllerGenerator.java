@@ -1,8 +1,8 @@
 package backend.academy.generators;
 
-import backend.academy.Coordinate;
-import backend.academy.Maze;
-import static backend.academy.generators.BackTrackingGenerator.RANDOM;
+import backend.academy.model.Coordinate;
+import backend.academy.model.Maze;
+import static backend.academy.GameSession.RANDOM;
 
 public class EllerGenerator implements Generator {
     private int[][] mazeInt;

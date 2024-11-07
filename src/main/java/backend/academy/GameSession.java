@@ -5,13 +5,17 @@ import backend.academy.generators.EllerGenerator;
 import backend.academy.generators.Generator;
 import backend.academy.handlers.InHandler;
 import backend.academy.handlers.OutHandler;
+import backend.academy.model.Coordinate;
+import backend.academy.model.Maze;
 import backend.academy.solvers.BFSSolver;
 import backend.academy.solvers.BackTrackingSolver;
 import backend.academy.solvers.Solver;
 import java.util.HashMap;
+import java.util.Random;
 
 @SuppressWarnings("MultipleStringLiterals")
 public final class GameSession {
+    public static final Random RANDOM = new Random();
     private final HashMap<String, Generator> generators = new HashMap<>();
     private final HashMap<String, Solver> solvers = new HashMap<>();
     private final OutHandler output = new OutHandler(System.out);
