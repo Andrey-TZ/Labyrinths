@@ -35,13 +35,13 @@ public final class BackTrackingSolver implements Solver {
         // Массив, содержащий возвращаемые клетки
         ArrayList<Cell> cells = new ArrayList<>();
 
-        for (Coordinate cell : neighbours) {
+        for (Coordinate neighbour : neighbours) {
             // Проверяем, что клетка находится в лабиринте
 
-            if (cell.x() >= 0 && cell.x() < maze.width() && cell.y() >= 0
-                && cell.y() < maze.height()) {
+            if (neighbour.x() >= 0 && neighbour.x() < maze.width() && neighbour.y() >= 0
+                && neighbour.y() < maze.height()) {
                 // Берем клетку с нужными координатами из лабиринта
-                Cell mazeCell = maze.getCell(cell.x(), cell.y());
+                Cell mazeCell = maze.getCell(neighbour.x(), neighbour.y());
                 // Проверяем, что это не стена лабиринта и алгоритм туда еще не заходил
                 if (mazeCell.type() != Cell.Type.WALL && mazeCell.type() != Cell.Type.VISITED
                     && mazeCell.type() != Cell.Type.DEAD_END) {
