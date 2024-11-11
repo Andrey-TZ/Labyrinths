@@ -10,7 +10,7 @@ import static java.lang.Math.abs;
 
 public final class BackTrackingGenerator implements Generator {
 
-    private ArrayList<Cell> getNeighbours(int height, int width, Cell current, Maze maze) {
+    private ArrayList<Cell> getNeighbours(Cell current, Maze maze) {
         int x = current.x();
         int y = current.y();
 
@@ -27,8 +27,8 @@ public final class BackTrackingGenerator implements Generator {
         for (Coordinate cell : neighbours) {
             // Проверяем, что клетка находится в лабиринте
 
-            if (cell.x() >= 0 && cell.x() < width && cell.y() >= 0
-                && cell.y() < height) {
+            if (cell.x() >= 0 && cell.x() < maze.width() && cell.y() >= 0
+                && cell.y() < maze.height()) {
                 // Берем клетку с нужными координатами из лабиринта
                 Cell mazeCell = maze.getCell(cell.x(), cell.y());
                 // Проверяем, что это не стена лабиринта и алгоритм туда еще не заходил
@@ -68,7 +68,7 @@ public final class BackTrackingGenerator implements Generator {
 
     @Override
     public Maze generate(int height, int width, Coordinate start, Coordinate finish) {
-        Maze maze = new Maze(height, width, Maze.MazeType.WALLS);
+        Maze maze = new Maze(height, width, false);
 
         Cell currentCell = maze.getCell(start.x(), start.y());
         ArrayList<Cell> neighbours;
@@ -77,7 +77,7 @@ public final class BackTrackingGenerator implements Generator {
         int unvisitedNum = height * width;
 
         do {
-            neighbours = getNeighbours(height, width, currentCell, maze);
+            neighbours = getNeighbours(currentCell, maze);
             maze.makeVisited(currentCell.x(), currentCell.y());
             if (!neighbours.isEmpty()) {
                 neighbour = neighbours.get(GameSession.RANDOM.nextInt(neighbours.size()));
@@ -95,7 +95,6 @@ public final class BackTrackingGenerator implements Generator {
                 break;
             }
         }
-
         while (unvisitedNum > 0);
 
         maze.setStart(start);

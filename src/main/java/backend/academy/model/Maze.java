@@ -10,8 +10,6 @@ public final class Maze {
     @Getter private Coordinate start;
     @Getter private Coordinate finish;
 
-    public enum MazeType { EMPTY, WALLS }
-
     private Maze(int height, int width, Cell[][] grid, Coordinate start, Coordinate finish) {
         this.height = height;
         this.width = width;
@@ -20,34 +18,31 @@ public final class Maze {
         this.finish = finish;
     }
 
-    public Maze(int height, int width, MazeType type) {
+    public Maze(int height, int width, boolean isEmpty) {
         this.height = height;
         this.width = width;
         grid = new Cell[height][width];
 
-        switch (type) {
-            case WALLS -> {
-                for (int i = 0; i < height; i++) {
-                    for (int j = 0; j < width; j++) {
-                        if ((i % 2 != 0 && j % 2 != 0)
-                            && (i < height - 1 && j < width - 1)) {
-                            grid[i][j] = new Cell(j, i, Cell.Type.CELL);
-                        } else {
-                            grid[i][j] = new Cell(j, i, Cell.Type.WALL);
-                        }
+        if (isEmpty) {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (i % 2 == 0) {
+                        grid[i][j] = new Cell(j, i, Cell.Type.WALL);
+                    } else if (j == 0 || j == width - 1) {
+                        grid[i][j] = new Cell(j, i, Cell.Type.WALL);
+                    } else {
+                        grid[i][j] = new Cell(j, i, Cell.Type.CELL);
                     }
                 }
             }
-            default -> { // По умолчанию стены только по краям лабиринта
-                for (int i = 0; i < height; i++) {
-                    for (int j = 0; j < width; j++) {
-                        if (i % 2 == 0) {
-                            grid[i][j] = new Cell(j, i, Cell.Type.WALL);
-                        } else if (j == 0 || j == width - 1) {
-                            grid[i][j] = new Cell(j, i, Cell.Type.WALL);
-                        } else {
-                            grid[i][j] = new Cell(j, i, Cell.Type.CELL);
-                        }
+        } else {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if ((i % 2 != 0 && j % 2 != 0)
+                        && (i < height - 1 && j < width - 1)) {
+                        grid[i][j] = new Cell(j, i, Cell.Type.CELL);
+                    } else {
+                        grid[i][j] = new Cell(j, i, Cell.Type.WALL);
                     }
                 }
             }
