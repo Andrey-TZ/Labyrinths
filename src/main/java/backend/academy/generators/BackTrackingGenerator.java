@@ -16,10 +16,9 @@ public final class BackTrackingGenerator implements Generator {
         Maze maze = new Maze(height, width, false);
 
         Cell currentCell = maze.getCell(start.x(), start.y());
-        ArrayList<Cell> neighbours;
+        List<Cell> neighbours;
         Cell neighbour;
         Stack<Cell> stack = new Stack<>();
-        int unvisitedNum = height * width;
 
         do {
             neighbours = getNeighbours(currentCell, maze);
@@ -35,7 +34,7 @@ public final class BackTrackingGenerator implements Generator {
                 break;
             }
         }
-        while (unvisitedNum > 0);
+        while (!neighbours.isEmpty() || !stack.isEmpty());
 
         maze.setStart(start);
         maze.setFinish(finish);
@@ -43,7 +42,7 @@ public final class BackTrackingGenerator implements Generator {
         return maze;
     }
 
-    private ArrayList<Cell> getNeighbours(Cell current, Maze maze) {
+    private List<Cell> getNeighbours(Cell current, Maze maze) {
         int x = current.x();
         int y = current.y();
 
@@ -55,7 +54,7 @@ public final class BackTrackingGenerator implements Generator {
 
         Coordinate[] neighbours = {dw, rt, up, lt};
         // Массив, содержащий возвращаемые клетки
-        ArrayList<Cell> cells = new ArrayList<>();
+        List<Cell> cells = new ArrayList<>();
 
         for (Coordinate cell : neighbours) {
             // Проверяем, что клетка находится в лабиринте
