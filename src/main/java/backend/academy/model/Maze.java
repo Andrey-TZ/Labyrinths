@@ -1,6 +1,7 @@
 package backend.academy.model;
 
 import java.util.Arrays;
+import java.util.Objects;
 import lombok.Getter;
 
 public final class Maze {
@@ -113,13 +114,7 @@ public final class Maze {
 
     @Override
     public int hashCode() {
-        int total = 31;
-
-        total = 31 * total + height;
-        total = 31 * total + width;
-        total = 31 * total + Arrays.deepHashCode(grid);
-        total = 31 * total + start.hashCode() + finish.hashCode();
-        return total;
+        return Objects.hash(height, width, Arrays.deepHashCode(grid), start, finish);
     }
 
     @Override

@@ -7,15 +7,47 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class BFSSolver implements Solver {
     private Maze solvedMaze;
-    private HashMap<Cell, Cell> chainOfCells;
-    private ArrayList<Cell> visitedCells;
+    private Map<Cell, Cell> chainOfCells;
+    private List<Cell> visitedCells;
+
+    @Override
+    public Maze solve(Maze maze) {
+        Deque<Cell> deque = new ArrayDeque<>();
+        chainOfCells = new HashMap<>();
+        visitedCells = new ArrayList<>();
+
+        solvedMaze = maze.copy();
+        Cell currentCell = solvedMaze.getStartCell();
+        List<Cell> neighbours;
+
+        deque.add(currentCell);
+
+        do {
+            currentCell = deque.pop();
+
+            if (solvedMaze.checkFinish(currentCell)) {
+                displayPath(currentCell);
+                return solvedMaze;
+            }
+
+            neighbours = getNeighbours(currentCell);
+            if (!neighbours.isEmpty()) {
+                deque.addAll(neighbours);
+            }
+        }
+        while (!deque.isEmpty());
+        displayPath(currentCell);
+        return solvedMaze;
+    }
 
     // Возвращает доступных соседей клетки
-    private ArrayList<Cell> getNeighbours(Cell current) {
-        ArrayList<Cell> neighbours = new ArrayList<>();
+    private List<Cell> getNeighbours(Cell current) {
+        List<Cell> neighbours = new ArrayList<>();
         int x = current.x();
         int y = current.y();
 
@@ -55,33 +87,4 @@ public final class BFSSolver implements Solver {
         }
     }
 
-    @Override
-    public Maze solve(Maze maze) {
-        Deque<Cell> deque = new ArrayDeque<>();
-        chainOfCells = new HashMap<>();
-        visitedCells = new ArrayList<>();
-
-        solvedMaze = maze.copy();
-        Cell currentCell = solvedMaze.getStartCell();
-        ArrayList<Cell> neighbours;
-
-        deque.add(currentCell);
-
-        do {
-            currentCell = deque.pop();
-
-            if (solvedMaze.checkFinish(currentCell)) {
-                displayPath(currentCell);
-                return solvedMaze;
-            }
-
-            neighbours = getNeighbours(currentCell);
-            if (!neighbours.isEmpty()) {
-                deque.addAll(neighbours);
-            }
-        }
-        while (!deque.isEmpty());
-        displayPath(currentCell);
-        return solvedMaze;
-    }
 }

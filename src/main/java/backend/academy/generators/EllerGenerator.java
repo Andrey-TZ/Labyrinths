@@ -55,6 +55,21 @@ public class EllerGenerator implements Generator {
         return mazeCell;
     }
 
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                switch (mazeInt[y][x]) {
+                    case -1 -> stringBuilder.append("#");
+                    case 0 -> stringBuilder.append("@");
+                    default -> stringBuilder.append(" ");
+                }
+            }
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
+    }
+
     private void makeHorizontalLinks(int y) {
         for (int x = 1; x < (width - 2) - 1; x += 2) {
             // Будем ли ставить стенку
@@ -109,20 +124,5 @@ public class EllerGenerator implements Generator {
                 mazeCell.makeVisited(x, y + 1);
             }
         }
-    }
-
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                switch (mazeInt[y][x]) {
-                    case -1 -> stringBuilder.append("#");
-                    case 0 -> stringBuilder.append("@");
-                    default -> stringBuilder.append(" ");
-                }
-            }
-            stringBuilder.append("\n");
-        }
-        return stringBuilder.toString();
     }
 }

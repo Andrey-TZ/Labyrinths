@@ -1,7 +1,9 @@
 package backend.academy.model;
 
+import java.util.Objects;
+
 public record Cell(int x, int y, Type type) {
-    public enum Type { WALL, CELL, PASSAGE, FOREST, HILL, START, FINISH, VISITED, DEAD_END }
+    public enum Type { WALL, CELL, PASSAGE, START, FINISH, VISITED, DEAD_END }
 
     public Cell(Coordinate coordinate, Type type) {
         this(coordinate.x(), coordinate.y(), type);
@@ -9,12 +11,7 @@ public record Cell(int x, int y, Type type) {
 
     @Override
     public int hashCode() {
-        int total = 31;
-
-        total = 31 * total + x;
-        total = 31 * total + y;
-        total = 31 * total + type.hashCode();
-        return total;
+        return Objects.hash(x, y, type);
     }
 
     @Override

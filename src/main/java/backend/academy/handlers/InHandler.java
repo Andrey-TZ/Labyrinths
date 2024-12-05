@@ -3,6 +3,7 @@ package backend.academy.handlers;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.Set;
 
 public class InHandler {
     private final Scanner scanner;
@@ -48,5 +49,18 @@ public class InHandler {
             coordinate = getInt("Введите координату: ");
         }
         return coordinate;
+    }
+
+    public String getKey(Set<String> keys, String message) {
+        String key = getString(message);
+
+        while (!keys.contains(key)) {
+            output.showMessage("Введенного алгоритма не существует. Доступны варианты:", true);
+            output.showSet(keys);
+
+            key = getString(message);
+        }
+
+        return key;
     }
 }

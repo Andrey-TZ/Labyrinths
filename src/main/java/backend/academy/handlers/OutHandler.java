@@ -4,6 +4,7 @@ import backend.academy.model.Maze;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 @SuppressWarnings("RegexpSinglelineJava")
 public class OutHandler {
@@ -22,7 +23,11 @@ public class OutHandler {
     }
 
     public void showMaze(Maze maze, String message) {
-        System.out.println(message);
-        System.out.println(maze);
+        output.println(message);
+        output.println(maze);
+    }
+
+    public void showSet(Set<String> set) {
+        output.println(String.join(", ", set));
     }
 }

@@ -5,10 +5,43 @@ import backend.academy.model.Cell;
 import backend.academy.model.Coordinate;
 import backend.academy.model.Maze;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import static java.lang.Math.abs;
 
 public final class BackTrackingGenerator implements Generator {
+
+    @Override
+    public Maze generate(int height, int width, Coordinate start, Coordinate finish) {
+        Maze maze = new Maze(height, width, false);
+
+        Cell currentCell = maze.getCell(start.x(), start.y());
+        ArrayList<Cell> neighbours;
+        Cell neighbour;
+        Stack<Cell> stack = new Stack<>();
+        int unvisitedNum = height * width;
+
+        do {
+            neighbours = getNeighbours(currentCell, maze);
+            maze.makeVisited(currentCell.x(), currentCell.y());
+            if (!neighbours.isEmpty()) {
+                neighbour = neighbours.get(GameSession.RANDOM.nextInt(neighbours.size()));
+                stack.push(currentCell);
+                removeWall(currentCell, neighbour, maze);
+                currentCell = neighbour;
+            } else if (!stack.isEmpty()) {
+                currentCell = stack.pop();
+            } else {
+                break;
+            }
+        }
+        while (unvisitedNum > 0);
+
+        maze.setStart(start);
+        maze.setFinish(finish);
+
+        return maze;
+    }
 
     private ArrayList<Cell> getNeighbours(Cell current, Maze maze) {
         int x = current.x();
@@ -41,7 +74,7 @@ public final class BackTrackingGenerator implements Generator {
         return cells;
     }
 
-    private ArrayList<Cell> getUnvisited(Maze maze, int height, int width) {
+    private List<Cell> getUnvisited(Maze maze, int height, int width) {
         ArrayList<Cell> unvisited = new ArrayList<>();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -64,43 +97,6 @@ public final class BackTrackingGenerator implements Generator {
 
         return maze;
 
-    }
-
-    @Override
-    public Maze generate(int height, int width, Coordinate start, Coordinate finish) {
-        Maze maze = new Maze(height, width, false);
-
-        Cell currentCell = maze.getCell(start.x(), start.y());
-        ArrayList<Cell> neighbours;
-        Cell neighbour;
-        Stack<Cell> stack = new Stack<>();
-        int unvisitedNum = height * width;
-
-        do {
-            neighbours = getNeighbours(currentCell, maze);
-            maze.makeVisited(currentCell.x(), currentCell.y());
-            if (!neighbours.isEmpty()) {
-                neighbour = neighbours.get(GameSession.RANDOM.nextInt(neighbours.size()));
-                stack.push(currentCell);
-                maze = removeWall(currentCell, neighbour, maze);
-                currentCell = neighbour;
-            } else if (!stack.isEmpty()) {
-                currentCell = stack.pop();
-            } else {
-//                    System.out.println(unvisitedNum);
-//                    unvisited = getUnvisited(maze, height, width);
-//                    unvisitedNum = unvisited.size();
-//                    currentCell = unvisited.get(random.nextInt(unvisited.size()));
-//                    maze.makeVisited(currentCell.x(), currentCell.y());
-                break;
-            }
-        }
-        while (unvisitedNum > 0);
-
-        maze.setStart(start);
-        maze.setFinish(finish);
-
-        return maze;
     }
 
 }

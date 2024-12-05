@@ -11,13 +11,14 @@ import backend.academy.solvers.BFSSolver;
 import backend.academy.solvers.BackTrackingSolver;
 import backend.academy.solvers.Solver;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @SuppressWarnings("MultipleStringLiterals")
 public final class GameSession {
     public static final Random RANDOM = new Random();
-    private final HashMap<String, Generator> generators = new HashMap<>();
-    private final HashMap<String, Solver> solvers = new HashMap<>();
+    private final Map<String, Generator> generators = new HashMap<>();
+    private final Map<String, Solver> solvers = new HashMap<>();
     private final OutHandler output = new OutHandler(System.out);
     private final InHandler input = new InHandler(System.in, output);
     private static final int SCALE = 2;
@@ -45,38 +46,14 @@ public final class GameSession {
             new Coordinate(input.getCoordinate(0, width) * SCALE - 1, input.getCoordinate(0, height) * SCALE - 1);
 
         // Определение генератора
-        output.showMessage("Доступны генераторы: ", false);
-        for (String generatorName : generators.keySet()) {
-            output.showMessage(generatorName + "\t", false);
-        }
-        output.showMessage("", true);
 
-        String generatorName = input.getString("Введите тип генератора: ");
-        while (true) {
-            if (generators.containsKey(generatorName)) {
-                generator = generators.get(generatorName);
-                break;
-            }
-            generatorName = input.getString("Введите тип генератора: ");
-        }
+        generator = generators.get(input.getKey(generators.keySet(), "Введите название алгоритма генерации: "));
+
         Maze maze = generator.generate(height * SCALE + 1, width * SCALE + 1, start, finish);
         output.showMaze(maze, "Ваш лабиринт готов");
 
         // Определение solver'а
-        output.showMessage("Доступны алгоритмы для поиска выхода из лабиринта: ", false);
-        for (String solverName : solvers.keySet()) {
-            output.showMessage(solverName + "\t", false);
-        }
-        output.showMessage("", true);
-
-        String solverName = input.getString("Введите тип алгоритма: ");
-        while (true) {
-            if (solvers.containsKey(solverName)) {
-                solver = solvers.get(solverName);
-                break;
-            }
-            solverName = input.getString("Введите тип поиска выхода из лабиринта: ");
-        }
+        solver = solvers.get(input.getKey(solvers.keySet(), "Введите название алгоритма поиска выхода: "));
 
         Maze mazeSolved = solver.solve(maze);
         output.showMaze(mazeSolved, "Ваш лабиринт решен");

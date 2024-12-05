@@ -5,6 +5,7 @@ import backend.academy.model.Cell;
 import backend.academy.model.Coordinate;
 import backend.academy.model.Maze;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 //Алгоритм поиска пути бэктрекингом:
@@ -21,7 +22,7 @@ import java.util.Stack;
 public final class BackTrackingSolver implements Solver {
 
     // Возвращает доступных соседей клетки
-    private ArrayList<Cell> getNeighbours(Cell current, Maze maze) {
+    private List<Cell> getNeighbours(Cell current, Maze maze) {
         int x = current.x();
         int y = current.y();
 
@@ -33,7 +34,7 @@ public final class BackTrackingSolver implements Solver {
 
         Coordinate[] neighbours = {dw, rt, up, lt};
         // Массив, содержащий возвращаемые клетки
-        ArrayList<Cell> cells = new ArrayList<>();
+        List<Cell> cells = new ArrayList<>();
 
         for (Coordinate neighbour : neighbours) {
             // Проверяем, что клетка находится в лабиринте
@@ -58,7 +59,7 @@ public final class BackTrackingSolver implements Solver {
         Cell startCell = solvedMaze.getStartCell();
         Cell currentCell = startCell;
         Stack<Cell> stack = new Stack<>();
-        ArrayList<Cell> neighbours;
+        List<Cell> neighbours;
         Cell neighbour;
 
         while (!solvedMaze.checkFinish(currentCell)) {
